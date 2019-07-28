@@ -1,4 +1,6 @@
-export function reducer(state, action): any {
+import { ProductState, initialProductState } from './product.state';
+
+export function reducer(state = initialProductState, action): ProductState {
 
     switch (action.type) {
         case "TOGGLE_PRODUCT_CODE":

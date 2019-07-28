@@ -1,4 +1,6 @@
-export function reducer(state, action): any {
+import { UserState } from './user.state';
+
+export function reducer(state: UserState, action): UserState {
 
     switch (action.type) {
         case "MASK_USERNAME":
