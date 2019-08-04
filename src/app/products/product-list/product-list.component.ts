@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs';
+import { Store, select } from '@ngrx/store';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
 import * as fromProduct from "../state/product.state";
-
-import { Store, select } from '@ngrx/store';
+import { getShowProductCode } from '../state/product.selector';
 
 @Component({
   selector: 'pm-product-list',
@@ -38,7 +38,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       (err: any) => this.errorMessage = err.error
     );
 
-    this.store.pipe(select("products")).subscribe(products => this.displayCode = products.showProductCode);
+    this.store.pipe(select(getShowProductCode)).subscribe(showProductCode => this.displayCode =  showProductCode);
   }
 
   ngOnDestroy(): void {
