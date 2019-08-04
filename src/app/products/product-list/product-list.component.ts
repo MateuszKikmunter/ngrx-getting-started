@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 
+import { ToggleProductCode } from './../state/product.actions';
 import { Product } from '../product';
 import { ProductService } from '../product.service';
 import * as fromProduct from "../state/product.state";
@@ -54,10 +55,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   checkChanged(value: boolean) {
-    this.store.dispatch({
-      type: "TOGGLE_PRODUCT_CODE",
-      payload: value
-    });
+    this.store.dispatch(new ToggleProductCode(value));
   }
 
 }
