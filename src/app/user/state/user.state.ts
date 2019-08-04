@@ -1,6 +1,6 @@
+import { User } from './../user';
 
-import * as fromRoot from "../../state/app.state";
-
-export interface UserState extends fromRoot.State {
+export interface UserState {
     maskUserName: boolean;
+    currentUser: User;
 }
