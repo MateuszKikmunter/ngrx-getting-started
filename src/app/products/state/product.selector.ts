@@ -21,7 +21,10 @@ export const getProducts = createSelector(
 
 export const clearCurrentProduct = createSelector(
     getProductFeatureState,
-    state => {
-        state.currentProduct = null;
-    }
+    state => state.currentProduct
+);
+
+export const initializeCurrentProduct = createSelector(
+    getProductFeatureState,
+    state => state.currentProduct
 );
