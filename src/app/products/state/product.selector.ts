@@ -18,3 +18,10 @@ export const getProducts = createSelector(
     getProductFeatureState,
     state => state.products
 );
+
+export const clearCurrentProduct = createSelector(
+    getProductFeatureState,
+    state => {
+        state.currentProduct = null;
+    }
+);

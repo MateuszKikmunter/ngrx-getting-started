@@ -25,7 +25,13 @@ export function reducer(state = initialProductState, action: ProductActions): Pr
         case ProductActionTypes.InitializeCurrentProduct:
             return {
                 ...state,
-                currentProduct: state.currentProduct
+                currentProduct: {
+                    id: 0,
+                    productCode: "New",
+                    productName: "",
+                    description: "",
+                    starRating: 0
+                }
             };
 
         default:
