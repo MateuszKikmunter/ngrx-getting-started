@@ -1,13 +1,12 @@
-import { takeWhile } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { takeWhile } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 
-import { ClearCurrentProduct, SetCurrentProduct, UpdateProduct, DeleteProduct, CreateProduct } from './../state/product.actions';
+import { ClearCurrentProduct, UpdateProduct, DeleteProduct, CreateProduct } from './../state/product.actions';
 import { Product } from '../product';
 import { ProductState } from './../state/product.state';
-import { ProductService } from '../product.service';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
 import { getCurrentProduct } from '../state/product.selector';
@@ -31,9 +30,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
 
-  constructor(private fb: FormBuilder,
-    private store: Store<ProductState>,
-    private productService: ProductService) {
+  constructor(
+    private fb: FormBuilder,
+    private store: Store<ProductState>
+  ) {
 
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
@@ -68,10 +68,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.store.pipe(
       select(getCurrentProduct),
       takeWhile(() => this._componentActive))
-    .subscribe(selectedProduct => {
-      this.product = selectedProduct;
-      this.displayProduct(selectedProduct);
-    });
+      .subscribe(selectedProduct => {
+        this.product = selectedProduct;
+        this.displayProduct(selectedProduct);
+      });
 
     // Watch for value changes
     this.productForm.valueChanges.subscribe(
@@ -98,11 +98,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.productForm.reset();
 
       // Display the appropriate page title
-      if (this.product.id === 0) {
-        this.pageTitle = 'Add Product';
-      } else {
-        this.pageTitle = `Edit Product: ${this.product.productName}`;
-      }
+      this.updateComponentTitle();
 
       // Update the data on the form
       this.productForm.patchValue({
@@ -136,11 +132,19 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         // This ensures values not on the form, such as the Id, are retained
         const product = { ...this.product, ...this.productForm.value };
 
-        product.id === 0 ? this.store.dispatch(new CreateProduct(product)) : this.store.dispatch(new UpdateProduct(product));
+        product.id === 0
+          ? this.store.dispatch(new CreateProduct(product))
+          : this.store.dispatch(new UpdateProduct(product));
       }
     } else {
       this.errorMessage = 'Please correct the validation errors.';
     }
+  }
+
+  private updateComponentTitle(): void {
+    this.product.id === 0
+      ? this.pageTitle = 'Add Product'
+      : this.pageTitle = `Edit Product: ${this.product.productName}`;
   }
 
 }
