@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { mergeMap, map, catchError } from 'rxjs/operators';
+import { mergeMap, map, catchError, tap } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 
 import { 
@@ -12,7 +12,10 @@ import {
     LoadFailure, 
     UpdateProduct, 
     UpdateProductSuccess, 
-    UpdateProductFailure 
+    UpdateProductFailure, 
+    DeleteProduct,
+    DeleteProductSuccess,
+    DeleteProductFailure
 } from './product.actions';
 
 import { ProductService } from '../product.service';
@@ -41,5 +44,16 @@ export class ProductEffect {
                 map(updatedProduct => (new UpdateProductSuccess(updatedProduct))),
                 catchError(err => of(new UpdateProductFailure(err.message)))
         ))
+    )
+
+    @Effect()
+    deleteProduct$: Observable<Action> = this.actions$.pipe(
+        ofType(ProductActionTypes.DeleteProduct),
+        map((action: DeleteProduct) => action.payload),
+        mergeMap((productId: number) =>
+            this.productService.deleteProduct(productId).pipe(
+                map(() => new DeleteProductSuccess(productId)),
+                catchError(err => of(new DeleteProductFailure(err.message)))
+            ))
     )
 }

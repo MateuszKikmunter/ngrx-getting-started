@@ -42,13 +42,6 @@ export function reducer(state = initialProductState, action: ProductActions): Pr
                 error: action.payload
             };
 
-        case ProductActionTypes.UpdateProduct:
-            return {
-                ...state,
-                currentProductId: action.payload.id,
-                error: ""
-            };
-
         case ProductActionTypes.UpdateProductSuccess:
             const updatedProducts = state.products.map(item => action.payload.id === item.id ? action.payload : item);
             return {
@@ -59,6 +52,21 @@ export function reducer(state = initialProductState, action: ProductActions): Pr
             };
 
         case ProductActionTypes.UpdateProductFailure:
+            return {
+                ...state,
+                error: action.payload
+            };
+
+        case ProductActionTypes.DeleteProductSuccess:
+            const filteredProducts = state.products.filter(p => p.id !== action.payload);
+            return {
+                ...state,
+                products: filteredProducts,
+                currentProductId: null,
+                error: ""
+            };
+
+        case ProductActionTypes.DeleteProductFailure:
             return {
                 ...state,
                 error: action.payload

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Store, select } from '@ngrx/store';
 
-import { ClearCurrentProduct, SetCurrentProduct, UpdateProduct } from './../state/product.actions';
+import { ClearCurrentProduct, SetCurrentProduct, UpdateProduct, DeleteProduct } from './../state/product.actions';
 import { Product } from '../product';
 import { ProductState } from './../state/product.state';
 import { ProductService } from '../product.service';
@@ -68,7 +68,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.store.pipe(
       select(getCurrentProduct),
       takeWhile(() => this._componentActive))
-    .subscribe(selectedProduct => this.displayProduct(selectedProduct));
+    .subscribe(selectedProduct => {
+      this.product = selectedProduct;
+      this.displayProduct(selectedProduct);
+    });
 
     // Watch for value changes
     this.productForm.valueChanges.subscribe(
@@ -120,10 +123,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   deleteProduct(): void {
     if (this.product && this.product.id) {
       if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-        this.productService.deleteProduct(this.product.id).subscribe(
-          () => this.store.dispatch(new ClearCurrentProduct()),
-          (err: any) => this.errorMessage = err.error
-        );
+        this.store.dispatch(new DeleteProduct(this.product.id));
       }
     } else {
       this.store.dispatch(new ClearCurrentProduct());
