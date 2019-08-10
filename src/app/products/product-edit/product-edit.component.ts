@@ -1,3 +1,4 @@
+import { takeWhile } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -19,9 +20,11 @@ import { getCurrentProduct } from '../state/product.selector';
 export class ProductEditComponent implements OnInit, OnDestroy {
   pageTitle = 'Product Edit';
   errorMessage = '';
-  productForm: FormGroup;
 
+  productForm: FormGroup;
   product: Product | null;
+
+  private _componentActive: boolean = true;
 
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
@@ -29,8 +32,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private genericValidator: GenericValidator;
 
   constructor(private fb: FormBuilder,
-              private store: Store<ProductState>,
-              private productService: ProductService) {
+    private store: Store<ProductState>,
+    private productService: ProductService) {
 
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
@@ -57,16 +60,18 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     // Define the form group
     this.productForm = this.fb.group({
       productName: ['', [Validators.required,
-                         Validators.minLength(3),
-                         Validators.maxLength(50)]],
+      Validators.minLength(3),
+      Validators.maxLength(50)]],
       productCode: ['', Validators.required],
       starRating: ['', NumberValidators.range(1, 5)],
       description: ''
     });
 
     //TODO unsubscribe
-    this.store.pipe(select(getCurrentProduct))
-      .subscribe(selectedProduct => this.displayProduct(selectedProduct));
+    this.store.pipe(
+      select(getCurrentProduct),
+      takeWhile(() => this._componentActive))
+    .subscribe(selectedProduct => this.displayProduct(selectedProduct));
 
     // Watch for value changes
     this.productForm.valueChanges.subscribe(
@@ -75,6 +80,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._componentActive = false;
   }
 
   // Also validate on blur
