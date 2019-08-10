@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Store, select } from '@ngrx/store';
 
-import { ClearCurrentProduct, SetCurrentProduct } from './../state/product.actions';
+import { ClearCurrentProduct, SetCurrentProduct, UpdateProduct } from './../state/product.actions';
 import { Product } from '../product';
 import { ProductState } from './../state/product.state';
 import { ProductService } from '../product.service';
@@ -59,15 +59,12 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Define the form group
     this.productForm = this.fb.group({
-      productName: ['', [Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(50)]],
+      productName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       productCode: ['', Validators.required],
       starRating: ['', NumberValidators.range(1, 5)],
       description: ''
     });
 
-    //TODO unsubscribe
     this.store.pipe(
       select(getCurrentProduct),
       takeWhile(() => this._componentActive))
@@ -147,10 +144,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
             (err: any) => this.errorMessage = err.error
           );
         } else {
-          this.productService.updateProduct(p).subscribe(
-            product => this.store.dispatch(new SetCurrentProduct(product)),
-            (err: any) => this.errorMessage = err.error
-          );
+          this.store.dispatch(new UpdateProduct(p));
         }
       }
     } else {

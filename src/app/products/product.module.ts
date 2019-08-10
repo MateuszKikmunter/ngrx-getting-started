@@ -8,7 +8,7 @@ import { ProductShellComponent } from './product-shell/product-shell.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductEditComponent } from './product-edit/product-edit.component';
 
-import { ProductEffect } from './state/produts.effects';
+import { ProductEffect } from './state/product.effects';
 
 //ngrx
 import { StoreModule } from '@ngrx/store';

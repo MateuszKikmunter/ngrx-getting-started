@@ -13,25 +13,19 @@ export function reducer(state = initialProductState, action: ProductActions): Pr
         case ProductActionTypes.ClearCurrentProduct:
             return {
                 ...state,
-                currentProduct: null
+                currentProductId: null
             };
 
         case ProductActionTypes.SetCurrentProduct:
             return {
                 ...state,
-                currentProduct: action.payload
+                currentProductId: action.payload.id
             };
 
         case ProductActionTypes.InitializeCurrentProduct:
             return {
                 ...state,
-                currentProduct: {
-                    id: 0,
-                    productCode: "New",
-                    productName: "",
-                    description: "",
-                    starRating: 0
-                }
+                currentProductId: 0
             };
 
         case ProductActionTypes.LoadSuccess:
@@ -45,6 +39,28 @@ export function reducer(state = initialProductState, action: ProductActions): Pr
             return {
                 ...state,
                 products: [],
+                error: action.payload
+            };
+
+        case ProductActionTypes.UpdateProduct:
+            return {
+                ...state,
+                currentProductId: action.payload.id,
+                error: ""
+            };
+
+        case ProductActionTypes.UpdateProductSuccess:
+            const updatedProducts = state.products.map(item => action.payload.id === item.id ? action.payload : item);
+            return {
+                ...state,
+                products: updatedProducts,
+                currentProductId: action.payload.id,
+                error: ""
+            };
+
+        case ProductActionTypes.UpdateProductFailure:
+            return {
+                ...state,
                 error: action.payload
             };
 
