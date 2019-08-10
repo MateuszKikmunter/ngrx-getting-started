@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Store, select } from '@ngrx/store';
 
-import { ClearCurrentProduct, SetCurrentProduct, UpdateProduct, DeleteProduct } from './../state/product.actions';
+import { ClearCurrentProduct, SetCurrentProduct, UpdateProduct, DeleteProduct, CreateProduct } from './../state/product.actions';
 import { Product } from '../product';
 import { ProductState } from './../state/product.state';
 import { ProductService } from '../product.service';
@@ -122,11 +122,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   deleteProduct(): void {
     if (this.product && this.product.id) {
-      if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-        this.store.dispatch(new DeleteProduct(this.product.id));
-      }
-    } else {
-      this.store.dispatch(new ClearCurrentProduct());
+      confirm(`Really delete the product: ${this.product.productName}?`)
+        ? this.store.dispatch(new DeleteProduct(this.product.id))
+        : this.store.dispatch(new ClearCurrentProduct());
     }
   }
 
@@ -136,16 +134,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         // Copy over all of the original product properties
         // Then copy over the values from the form
         // This ensures values not on the form, such as the Id, are retained
-        const p = { ...this.product, ...this.productForm.value };
+        const product = { ...this.product, ...this.productForm.value };
 
-        if (p.id === 0) {
-          this.productService.createProduct(p).subscribe(
-            product => this.store.dispatch(new SetCurrentProduct(product)),
-            (err: any) => this.errorMessage = err.error
-          );
-        } else {
-          this.store.dispatch(new UpdateProduct(p));
-        }
+        product.id === 0 ? this.store.dispatch(new CreateProduct(product)) : this.store.dispatch(new UpdateProduct(product));
       }
     } else {
       this.errorMessage = 'Please correct the validation errors.';

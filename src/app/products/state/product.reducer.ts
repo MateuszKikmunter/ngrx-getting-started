@@ -72,6 +72,21 @@ export function reducer(state = initialProductState, action: ProductActions): Pr
                 error: action.payload
             };
 
+        case ProductActionTypes.CreateProductSuccess:
+            return {
+                ...state,
+                products: state.products.concat(action.payload),
+                currentProductId: action.payload.id,
+                error: ""
+            };
+
+        case ProductActionTypes.CreateProductFailure:
+            return {
+                ...state,
+                currentProductId: null,
+                error: action.payload
+            };
+
         default:
             return state;
     }
