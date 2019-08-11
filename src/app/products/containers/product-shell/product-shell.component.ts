@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
 import * as fromProduct from "../../state/product.state";
 import { Product } from '../../product';
