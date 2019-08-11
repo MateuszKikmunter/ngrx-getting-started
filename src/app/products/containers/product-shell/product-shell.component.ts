@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
 import * as fromProduct from "../../state/product.state";
 import { Product } from '../../product';
@@ -9,7 +10,8 @@ import { getCurrentProduct, getShowProductCode, getProducts, getError } from '..
 import { InitializeCurrentProduct, SetCurrentProduct, ToggleProductCode, Load } from '../../state/product.actions';
 
 @Component({
-    templateUrl: './product-shell.component.html'
+    templateUrl: './product-shell.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductShellComponent implements OnInit {
 
