@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 
 import * as fromProduct from "../../state/product.state";
 import { Product } from '../../product';
+import { CreateProduct, UpdateProduct } from './../../state/product.actions';
 import { getCurrentProduct, getShowProductCode, getProducts, getError } from '../../state/product.selector';
-import { InitializeCurrentProduct, SetCurrentProduct, ToggleProductCode, Load } from '../../state/product.actions';
+import { InitializeCurrentProduct, SetCurrentProduct, ToggleProductCode, Load, DeleteProduct } from '../../state/product.actions';
 
 @Component({
     templateUrl: './product-shell.component.html',
@@ -37,7 +38,19 @@ export class ProductShellComponent implements OnInit {
     this.store.dispatch(new SetCurrentProduct(product));
   }
 
-  checkChanged(value: boolean) {
+  checkChanged(value: boolean): void {
     this.store.dispatch(new ToggleProductCode(value));
+  }
+
+  deleteProduct(productId: number): void {
+    this.store.dispatch(new DeleteProduct(productId));
+  }
+
+  createProduct(product: Product): void {
+    this.store.dispatch(new CreateProduct(product));
+  }
+
+  updateProduct(product: Product): void {
+    this.store.dispatch(new UpdateProduct(product));
   }
 }
